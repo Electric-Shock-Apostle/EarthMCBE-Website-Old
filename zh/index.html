@@ -1,0 +1,347 @@
+<html lang="zh">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="EarthMC基岩版官网">
+    <title>
+        EarthMC基岩版
+    </title>
+    <script src="../lib/js/pace.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../lib/css/pace.css">
+    <link rel="stylesheet" type="text/css" href="../lib/css/caramel.min.css">
+    <link href="../lib/css/font-awesome.min.css" rel="stylesheet">
+    <script src="../lib/js/jquery.min.js"></script>
+    <script src="../lib/js/caramel.js"></script>
+    <script type="text/javascript" src="../lib/js/clay.min.js"></script>
+    <link href="../lib/css/animate.css" rel="stylesheet">
+    <script src="../lib/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <style>
+        .canvas3D {
+            background: rgba(0, 0, 0, 0);
+            position: absolute;
+            right: 0px;
+            top: 0;
+        }
+    </style>
+    <!-- Matomo -->
+    <script type="text/javascript">
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(["setCookieDomain", "*.earthmcbe.space"]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//analytics.earthmcbe.space/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+</head>
+
+<body style="overflow:auto;overflow-x: hidden">
+    <!--以下为导航栏代码-->
+    <nav class="bar dark" style="position: fixed; top: 0px; left: 0px; width: 100%; z-index: 1500">
+        <ul>
+            <li class="collapse"><span><i class="fa fa-bars"></i></span></li>
+            <li class="brand"><span href="https://earthmcbe.space" style="padding: 3px 18px 0 !important"><img
+                        src="../lib/img/logo.png" height="35px" width="auto"></span></li>
+            <ul class="right">
+                <li onclick="toWelcome()"><span>简介</span></li>
+                <li onclick="toRules()"><span>游戏规则</span></li>
+                <li onclick="toHistory()"><span>最新更新和已知BUG</span></li>
+                <li><span><a href="https://blog.earthmcbe.space" style="padding: 0px">博客</a></span></li>
+                <li><span><a href="https://status.earthmcbe.space" style="padding: 0px">服务状态</a></span></li>
+                <li><span><a href="https://earthmcbe.space/en/" style="padding: 0px">English</a></span></li>
+            </ul>
+        </ul>
+    </nav>
+    <!--以下为页面翻转脚本-->
+    <script>
+        function toWelcome() {
+            document.getElementById("welcome").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            );
+        }
+        function toRules() {
+            document.getElementById("rules").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            )
+        }
+        function toHistory() {
+            document.getElementById("history").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            )
+        }
+        function getStarted() {
+            document.getElementById("GetStarted").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            )
+        }
+        $(function () {
+            var nav = $(".nav"); //得到导航对象  
+            var win = $(window); //得到窗口对象  
+            var sc = $(document);//得到document文档对象。  
+            win.scroll(function () {
+                if (sc.scrollTop() >= 100) {
+                    nav.addClass("fixednav");
+                } else {
+                    nav.removeClass("fixednav");
+                }
+            })
+        })  
+    </script>
+    <!--以下为欢迎界面-->
+    <div id="welcome" class="box"
+        style="background-color: black; width: 100%; height: 100%; overflow: hidden; margin: 0px">
+        <!--以下为欢迎文字-->
+        <div class="box col-12" style="height: 100%; background-color: rgba(0,0,0,0); z-index:1000; position: relative">
+            <div class="card" style="margin: 0 auto; margin-top: 20%; margin-left: 10%;">
+                <div class="content wow bounceInDown" data-wow-delay=2s>
+                    <h6>欢迎来到</h6>
+                    <h4>EarthMC基岩版</h4>
+                    <p style="word-wrap: break-word; word-break: break-all;">
+                        这是Minecraft基岩版中的一个仿现实地形的生存服务器。尽可能模拟出地球上所有真实的地形。加入我们，并享受虚拟世界中的现实生活、与他人建立友谊、构建自己的家园！
+                    </p>
+                    <button class="primary" onclick="getStarted()" style="margin: 7px 0px">开始！</button>
+                </div>
+            </div>
+        </div>
+        <!--以下为旋转地球-->
+        <div id="canvas" style="width: 100%; height: 100%; margin:0 auto"></div>
+        <script type="text/javascript">
+            function Earth() {
+                var stage = new Clay.Stage(800, 600);
+                var world = stage.getWorld();
+                var camera = stage.getCamera();
+                camera.set(0, 0, 0);
+                camera.setResolution(800, 600);
+                camera.setTarget(new Clay.Vector(-100, 0, 100));
+                window.onresize = function () {
+                    stage.resizeTo(
+                        window.innerWidth || document.documentElement.clientWidth,
+                        window.innerHeight || document.documentElement.clientHeight
+                    );
+                };
+                window.onresize();
+                Clay.Collada.load('../lib/collada/earth.xml', function (scene) {
+                    scene.init(stage);
+                    var earth = new Clay.Texture('../lib/collada/earthmap1k.jpg', stage);
+                    var clouds = new Image();
+                    clouds.src = '../lib/collada/earthclouds1k.png';
+                    var dark = new Image();
+                    dark.src = '../lib/collada/darkside.png';
+                    var waiting = setInterval(function () {
+                        if (earth.complete && clouds.complete && dark.complete) {
+                            clearInterval(waiting);
+                            play();
+                        }
+                    }, 1000);
+                    function play() {
+                        var shape = world.getShapes()[0];
+                        shape.setMaterial(earth);
+                        var x, y, z, t = Math.PI / 4, r = 0, tick = 0.01, radius = 200;
+                        var ttx = earth.canvas.getContext('2d');
+                        var base = earth.image;
+                        var wind = 0;
+                        stage.addEvent('enterframe', function () {
+                            ttx.drawImage(base, 0, 0);
+                            var pos = (++wind) % 1000;
+                            ttx.drawImage(clouds, pos, 0);
+                            ttx.drawImage(clouds, pos - 1000, 0);
+                            ttx.drawImage(dark, 0, 0);
+                            t += tick;
+                            x = -100 + Math.sin(t) * radius;
+                            z = 100 + Math.cos(t) * radius;
+                            y = Math.cos(t / 3) * 50
+                            camera.set(x, y, z);
+                        });
+                        stage.run();
+                    }
+                });
+            }
+            window.addEventListener('load', function () {
+                new Earth();
+            }, false);
+        </script>
+    </div>
+    <!--一下是进服指南-->
+    <div class="box" id="GetStarted" style="width: 100%">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow fadeInDown" data-wow-delay=2s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color:#20bf6b">开始游戏</h3>
+            <div class="card">
+                <div class="content" style="background-color: #20bf6b; color: white">
+                    为了防止服务器遭到玩家破坏，服务器开启了白名单，请所有玩家加入群聊找管理员获取进入权限来进入服务器。
+                    点击此图片加入QQ群组<br>
+                    <a target="_blank"
+                        href="//shang.qq.com/wpa/qunwpa?idkey=9935e5f6656aa2850e05ff5fde501f1834cb950be157abe7b17cca1ac563947e"><img
+                            border="0" src="../lib/img/QQ-group.jpg" alt="EarthMC Bedrock Edition"
+                            title="EarthMC Bedrock Edition" height="15%" width="auto"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" id="Video" style="width: 100%">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow jackInTheBox" data-wow-delay=2s style="padding-left: 10px; padding-right: 10px;">
+            <div class="card">
+                <iframe src="//player.bilibili.com/player.html?aid=63812958&cid=110786865&page=1" scrolling="no"
+                    border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="70%">
+                </iframe>
+            </div>
+        </div>
+    </div>
+    <!--以下为服务器规则-->
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #45aaf2" id="rules">服务器规则</h3>
+            <div class="card" style="background-color: #45aaf2">
+                <div class="content" style="background-color: #45aaf2; color: white">
+                    <h5>总述</h5>
+                    这是一个经过比例缩小制作的地球，因为我们服务器具有某些特性并且为了保证您的游戏体验，<br>
+                    我们特意为您制定了一些对于这个服务器的描述，希望对您有所帮助<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #a55eea" id="rules">服务器基本规则</h3>
+            <div class="card" style="background-color: #a55eea">
+                <div class="content" style="background-color: #a55eea; color: white">
+                    本服务器唯一规则为不允许作弊。不过我们倡议玩家之间保持一个和谐良好的游戏关系，同时对于服务器内重要建筑物希望您予以重视与保护。我们致力于创造一个优质的游戏环境，这同样需要您的配合<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #778ca3" id="rules">货币系统</h3>
+            <div class="card" style="background-color: #778ca3">
+                <div class="content" style="background-color: #778ca3; color: white">
+                    在这个地球上，金锭为全球统一的货币。玩家之间可用货币进行交易。你可以把货币存进商店里，并可以买商店里的东西。<br>
+                    /shop 打开商店<br>
+                    /money 查看你当前存入商店的钱数<br>
+                    /topmoney 商店存钱排行<br>
+                    存钱：商店>sell item>gold ingot<br>
+                    取钱：商店>but item>gold ingot back<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #fa8231" id="rules">领地系统</h3>
+            <div class="card" style="background-color: #fa8231">
+                <div class="content" style="background-color: #fa8231; color: white">
+                    •管理者：管理国家领域的玩家，普通管理者为公民，总管理者为总统。<br>
+                    •有属性区域：拥有名字、代表旗帜等的区域。
+                    国家领域（领地）：指一个或多个范围的有属性区域并属于一个或多个管理者的管理区域；
+                    公共领域：除了国家领域之外的区域；
+                    国家领域户籍（国籍）：指一个人属于某一个国家领地的公民的法律资格，表明一个人同一个特定国家间的固定的法律联系；一个玩家最多拥有2个国籍；国家管理员则只能拥有一个国籍；
+                    国家总管理员（总统）：成立一个国家领域并专门管理其领地的玩家；
+                    国家领域法律（领法）：指总统管理公民的规定条文，每个领地可以拥有属于自己的领法且在不违背服务器的规则下。
+                    圈地：使用指定指令圈定的管理区域成为新建国家领域或者属于某领地；
+                    合法的圈地：所有的国家领域都为合法的圈地（管理员会清除不合法圈地）<br>
+                    •不能越级圈地，各级只能把同级地圈地（ *级：普通玩家player、管理员op）<br>
+                    •{} 同等于聊天框<br>
+                    领域名规定： { 领域名字realm name }
+                    •不按规则的领地一律清除，不退款！<br>
+                    具体规则请加群了解
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--以下为更新历史和已知BUG-->
+    <div class="box" style="width: 100%;">
+        <div class="box col-3"></div>
+        <div class="box col-8 wow rollIn" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #fc5c65" id="history">最新更新和已知BUG</h3>
+            <div class="card" style="background-color: #fc5c65">
+                <div class="content" style="background-color: #fc5c65; color: white">
+                    <h5>最新更新</h5>
+                    版本 0.3.0 虚 末 生 物 Nether&End&Organism<br>
+                    •BUG修复<br>
+                    •新增了地狱系统，缺失地狱堡垒，地狱门bug依旧存在（甚至可以去地狱的基岩层上面）<br>
+                    •新增了末地系统，只存在末地主岛和一些无用小岛，主岛上没有末影龙<br>
+                    •改进了生物系统（刷怪机制），新增流浪商人、蘑菇牛等，交易不可用<br>
+                    •新增盔甲架<br>
+                    <br>
+                    版本 0.3.1 <br>
+                    •商店全面汉化（可能部分汉化有点问题）<br>
+                    •末地传送门框架已加入商店<br>
+                    •怪物蛋、经验修补已可以找op购买<br>
+                    <br>
+                    <notice class="info"
+                        style="background-color: #d1ecf1; word-wrap: break-word; word-break: break-all; color: #0c5460">
+                        <b>提示</b>
+                        死亡掉落，困难难度，不能设置多个重生点是原本的游戏玩法，不能修改！如果发现其他bug，请在官方博客留言！
+                    </notice>
+                    <h5 style="margin-bottom: 0px">已知BUG</h5>
+                    •如果遇见打方块不掉落，所有互动事件不响应就是已断开连接<br>
+                    •没有boss<br>
+                    •村庄掠夺更新的所有物品和部分海洋更新的物品无法使用（部分方块可合成但不可使用）<br>
+                    •旗帜无法改图案<br>
+                    •盔甲架无法使用<br>
+                    •地狱门传送bug<br>
+                    •地狱不完整，末地不完整<br>
+                    •地图无法创建<br>
+                    •水电梯（灵魂沙和岩浆块在水下的气泡）无法使用<br>
+                    •铁砧修复装备有bug ，所以千万不要再修补武器了！！<br>
+                    •剪刀bug<br>
+                    •生物无法交配bug<br>
+                    •除红石以外的红石相关物品无法使用，有些不可放置<br>
+                    •由于方块id不同，地图的部分方块不正常<br>
+                    •各种延迟bug<br>
+                    •进服务器时在虚空，以及指令传送会传送到虚空（这个会补偿）<br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow rollIn" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #73C6B6" id="rules">获得支持</h3>
+            <div class="card" style="background-color: #73C6B6">
+                <div class="content" style="background-color: #73C6B6; color: white">
+                    如果您有任何问题，请点击下方的按钮给我们写邮件，我们会尽快回复。
+                    <button class="info"><a href="mailto:support@earthmcbe.space">获得支持</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//instant.page/2.0.0" type="module"
+        integrity="sha384-D7B5eODAUd397+f4zNFAVlnDNDtO1ppV8rPnfygILQXhqu3cUndgHvlcJR2Bhig8"></script>
+</body>
+<footer>
+    <div class="footer centered">
+        <div class="container">
+            Copyright © 2019 EarthMC. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+</html>

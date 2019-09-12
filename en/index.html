@@ -1,0 +1,372 @@
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="Website of the EarthMC BedRock Edition servers.">
+    <title>
+        EarthMC BedRock Edition
+    </title>
+    <script src="../lib/js/pace.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../lib/css/pace.css">
+    <link rel="stylesheet" type="text/css" href="../lib/css/caramel.min.css">
+    <link href="../lib/css/font-awesome.min.css" rel="stylesheet">
+    <script src="../lib/js/jquery.min.js"></script>
+    <script src="../lib/js/caramel.js"></script>
+    <script type="text/javascript" src="../lib/js/clay.min.js"></script>
+    <link href="../lib/css/animate.css" rel="stylesheet">
+    <script src="../lib/js/wow.min.js"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <style>
+        .canvas3D {
+            background: rgba(0, 0, 0, 0);
+            position: absolute;
+            right: 0px;
+            top: 0;
+        }
+    </style>
+    <!-- Matomo -->
+    <script type="text/javascript">
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(["setCookieDomain", "*.earthmcbe.space"]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//analytics.earthmcbe.space/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+</head>
+
+<body style="overflow:auto;overflow-x: hidden">
+    <!--以下为导航栏代码-->
+    <nav class="bar dark" style="position: fixed; top: 0px; left: 0px; width: 100%; z-index: 1500">
+        <ul>
+            <li class="collapse"><span><i class="fa fa-bars"></i></span></li>
+            <li class="brand"><span href="https://earthmcbe.space" style="padding: 3px 18px 0 !important"><img
+                        src="../lib/img/logo.png" height="35px" width="auto"></span></li>
+            <ul class="right">
+                <li onclick="toWelcome()"><span>Introduction</span></li>
+                <li onclick="toRules()"><span>Game Rules</span></li>
+                <li onclick="toHistory()"><span>Update History and Known BUGs</span></li>
+                <li><span><a href="https://blog.earthmcbe.space" style="padding: 0px">BLOG</a></span></li>
+                <li><span><a href="https://status.earthmcbe.space" style="padding: 0px">System Status</a></span></li>
+                <li><span><a href="https://earthmcbe.space/zh/" style="padding: 0px">中文</a></span></li>
+            </ul>
+        </ul>
+    </nav>
+    <!--以下为页面翻转脚本-->
+    <script>
+        function toWelcome() {
+            document.getElementById("welcome").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            );
+        }
+        function toRules() {
+            document.getElementById("rules").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            )
+        }
+        function toHistory() {
+            document.getElementById("history").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            )
+        }
+        function getStarted() {
+            document.getElementById("GetStarted").scrollIntoView(
+                {
+                    behavior: "smooth"
+                }
+            )
+        }
+        $(function () {
+            var nav = $(".nav"); //得到导航对象  
+            var win = $(window); //得到窗口对象  
+            var sc = $(document);//得到document文档对象。  
+            win.scroll(function () {
+                if (sc.scrollTop() >= 100) {
+                    nav.addClass("fixednav");
+                } else {
+                    nav.removeClass("fixednav");
+                }
+            })
+        })  
+    </script>
+    <!--以下为欢迎界面-->
+    <div id="welcome" class="box"
+        style="background-color: black; width: 100%; height: 100%; overflow: hidden; margin: 0px">
+        <!--以下为欢迎文字-->
+        <div class="box col-12" style="height: 100%; background-color: rgba(0,0,0,0); z-index:1000; position: relative">
+            <div class="card" style="margin: 0 auto; margin-top: 20%; margin-left: 10%;">
+                <div class="content wow bounceInDown" data-wow-delay=2s>
+                    <h6>Welcome To</h6>
+                    <h4>EarthMC Bedrock Edition</h4>
+                    <p style="word-wrap: break-word; word-break: break-all;">
+                        This is a surviving server that mimics real terrain in the Minecraft Bedrock Edition. Simulate
+                        as much as possible of all the real terrain on Earth. Join us and enjoy real life in the virtual
+                        world, make friends with others, and build your own homeland!
+                    </p>
+                    <button class="primary" onclick="getStarted()" style="margin: 7px 0px">Get Started！</button>
+                </div>
+            </div>
+        </div>
+        <!--以下为旋转地球-->
+        <div id="canvas" style="width: 100%; height: 100%; margin:0 auto"></div>
+        <script type="text/javascript">
+            function Earth() {
+                var stage = new Clay.Stage(800, 600);
+                var world = stage.getWorld();
+                var camera = stage.getCamera();
+                camera.set(0, 0, 0);
+                camera.setResolution(800, 600);
+                camera.setTarget(new Clay.Vector(-100, 0, 100));
+                window.onresize = function () {
+                    stage.resizeTo(
+                        window.innerWidth || document.documentElement.clientWidth,
+                        window.innerHeight || document.documentElement.clientHeight
+                    );
+                };
+                window.onresize();
+                Clay.Collada.load('../lib/collada/earth.xml', function (scene) {
+                    scene.init(stage);
+                    var earth = new Clay.Texture('../lib/collada/earthmap1k.jpg', stage);
+                    var clouds = new Image();
+                    clouds.src = '../lib/collada/earthclouds1k.png';
+                    var dark = new Image();
+                    dark.src = '../lib/collada/darkside.png';
+                    var waiting = setInterval(function () {
+                        if (earth.complete && clouds.complete && dark.complete) {
+                            clearInterval(waiting);
+                            play();
+                        }
+                    }, 1000);
+                    function play() {
+                        var shape = world.getShapes()[0];
+                        shape.setMaterial(earth);
+                        var x, y, z, t = Math.PI / 4, r = 0, tick = 0.01, radius = 200;
+                        var ttx = earth.canvas.getContext('2d');
+                        var base = earth.image;
+                        var wind = 0;
+                        stage.addEvent('enterframe', function () {
+                            ttx.drawImage(base, 0, 0);
+                            var pos = (++wind) % 1000;
+                            ttx.drawImage(clouds, pos, 0);
+                            ttx.drawImage(clouds, pos - 1000, 0);
+                            ttx.drawImage(dark, 0, 0);
+                            t += tick;
+                            x = -100 + Math.sin(t) * radius;
+                            z = 100 + Math.cos(t) * radius;
+                            y = Math.cos(t / 3) * 50
+                            camera.set(x, y, z);
+                        });
+                        stage.run();
+                    }
+                });
+            }
+            window.addEventListener('load', function () {
+                new Earth();
+            }, false);
+        </script>
+    </div>
+    <!--一下是进服指南-->
+    <div class="box" id="GetStarted" style="width: 100%">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow fadeInDown" data-wow-delay=2s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color:#20bf6b">Get Started</h3>
+            <div class="card">
+                <div class="content" style="background-color: #20bf6b; color: white">
+                    In order to prevent the server from being damaged by some player, the server has enabled the
+                    whitelist, and all players are invited to join the group chat to ask the administrator for gaining
+                    access to enter the server. Click this image below to join the QQ group<br>
+                    <a target="_blank"
+                        href="//shang.qq.com/wpa/qunwpa?idkey=9935e5f6656aa2850e05ff5fde501f1834cb950be157abe7b17cca1ac563947e"><img
+                            border="0" src="../lib/img/QQ-group.jpg" alt="EarthMC Bedrock Edition"
+                            title="EarthMC Bedrock Edition" height="15%" width="auto"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" id="Video" style="width: 100%">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow fadeInDown" data-wow-delay=2s style="padding-left: 10px; padding-right: 10px;">
+            <div class="card">
+                <iframe src="//player.bilibili.com/player.html?aid=63812958&cid=110786865&page=1" scrolling="no"
+                    border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="70%">
+                </iframe>
+            </div>
+        </div>
+    </div>
+    <!--以下为服务器规则-->
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #45aaf2" id="rules">Server Rules</h3>
+            <div class="card" style="background-color: #45aaf2">
+                <div class="content" style="background-color: #45aaf2; color: white">
+                    <h5>Overview</h5>
+                    This is a scaled-down planet, because our server has certain BUGs and to ensure your gaming
+                    experience, we have created some descriptions for this server for you, We hope to help you.<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #a55eea" id="rules">Server Basic Rules</h3>
+            <div class="card" style="background-color: #a55eea">
+                <div class="content" style="background-color: #a55eea; color: white">
+                    The only rule of this server is to not allow cheating. However, we advocate a harmonious and good
+                    game relationship between players, and we hope that you will pay attention to and protect the
+                    important buildings in the server. We are committed to creating a quality gaming environment that
+                    also requires your cooperation.<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #778ca3" id="rules">Currency System</h3>
+            <div class="card" style="background-color: #778ca3">
+                <div class="content" style="background-color: #778ca3; color: white">
+                    On this planet, gold ingots are the global currency. Players can trade in currencies. You can
+                    deposit the money in the store and buy things in the store.<br>
+                    /shop Open Shop GUI<br>
+                    /money View the amount of money you currently deposit into the store<br>
+                    /topmoney Store deposits ranking<br>
+                    Save money: store>sell item>gold ingot<br>
+                    Take money: store>but item>gold ingot back<br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow flipInX" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #fa8231" id="rules">Territorial system</h3>
+            <div class="card" style="background-color: #fa8231">
+                <div class="content" style="background-color: #fa8231; color: white">
+                    •OP: Manage players in the national domain, the general manager is the citizen, and the
+                    general manager is the president.<br>
+                    •There are attribute areas: areas with names, flags, etc.
+                    Country domain (territory): A management area that has one or more scopes of
+                    attributed areas and belongs to one or more managers;
+                    Public domain: areas other than the national domain;
+                    Country domicile (nationality): A legal qualification of a citizen who belongs
+                    to a national territory, indicating a fixed legal relationship between a person and a particular
+                    country; a player has a maximum of 2 nationalities; a national administrator can only own a
+                    nationality;
+                    National Administrator (President): The establishment of a national domain and
+                    the management of players in their territory;
+                    National Domain Law (Legal Law): Refers to the provisions of the President's
+                    management of citizens. Each territory may have its own laws and regulations without violating the
+                    rules of the server.
+                    Enclosure: A management area delineated by a specified order becomes a new
+                    national territory or belongs to a territory;
+                    Legal Enclosure: All national areas are legal enclosures (administrators will
+                    remove illegal enclaves)<br>
+                    •Can not be more levelly encircled, all levels can only be the same level of
+                    land (* level: ordinary player player, administrator op)<br>
+                    •{} is equal to chat box
+                    Domain name specification: {domain name realm name }<br>
+                    •Clearly do not follow the rules of the territory, no refund!<br>
+                    Please understand the specific rules
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--以下为更新历史和已知BUG-->
+    <div class="box" style="width: 100%;">
+        <div class="box col-3"></div>
+        <div class="box col-8 wow rollIn" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #fc5c65" id="history">Latest Update and Known BUGs</h3>
+            <div class="card" style="background-color: #fc5c65">
+                <div class="content" style="background-color: #fc5c65; color: white">
+                    <h5>Latest Update</h5>
+                    Version 0.3.0 Nether&End&Organism<br>
+                    •Fix BUGs<br>
+                    •Added Hell system, Miss Hell Fortress, Hell Gate bug still exists (can even go to the base rock
+                    layer of Hell)<br>
+                    •A new end system has been added. There are only the end of the main island and some useless
+                    islands. There is no end dragon on the main island.<br>
+                    •Improved biological system (brushing mechanism), adding stray merchants, mushroom cattle, etc.,
+                    transactions are not available<br>
+                    •Add armor stand<br>
+                    <br>
+                    Version 0.3.1 <br>
+                    •The store is fully finished (may be partially finished with a bit of a problem)<br>
+                    •The portal door frame has been added to the store<br>
+                    •Monster eggs, experience repair can be bought by contacting OPs<br>
+                    <br>
+                    <notice class="info"
+                        style="background-color: #d1ecf1; word-wrap: break-word; word-break: break-all; color: #0c5460">
+                        <b>Notice</b>
+                        Death drops, difficult difficulty, can not set multiple rebirth points is the original gameplay,
+                        can not be modified! If you find other bugs, please leave a message in the official blog!
+                    </notice>
+                    <h5 style="margin-bottom: 0px">Known BUGs</h5>
+                    •If the hit box does not fall, all interactive events do not respond or are disconnected.<br>
+                    •No BOSS<br>
+                    •All items updated by the village plunder and some marine updated items cannot be used (some squares
+                    can be synthesized but not used)<br>
+                    •Banner cannot change pattern<br>
+                    •Armor frame cannot be used<br>
+                    •Hell gate to send has BUGs<br>
+                    •Hell is incomplete and the end is incomplete<br>
+                    •Map cannot be created<br>
+                    •Water elevator (soul sand and air bubbles under water bubbles) cannot be used<br>
+                    •There are bugs in the anvil repair equipment, so don't fix the weapon anymore! !<br>
+                    •Scissors BUG<br>
+                    •Creatures cannot mate BUG<br>
+                    •Redstone related items other than redstone cannot be used, some cannot be placed<br>
+                    •Some squares of the map are not normal due to different block ids<br>
+                    •Various delay bugs<br>
+                    •In the void when entering the server, and the command transfer will be transferred to the void
+                    (this will compensate)<br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box" style="width: 100%;">
+        <div class="full col-3"></div>
+        <div class="box col-8 wow rollIn" data-wow-delay=1s style="padding-left: 10px; padding-right: 10px;">
+            <h3 style="color: #73C6B6" id="rules">Contact Support</h3>
+            <div class="card" style="background-color: #73C6B6">
+                <div class="content" style="background-color: #73C6B6; color: white">
+                    If you have any questions, please click the button below to write us an email and we will get back
+                    to you as soon as possible.
+                    <button class="info"><a href="mailto:support@earthmcbe.space">Contact Support</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="//instant.page/2.0.0" type="module"
+        integrity="sha384-D7B5eODAUd397+f4zNFAVlnDNDtO1ppV8rPnfygILQXhqu3cUndgHvlcJR2Bhig8"></script>
+</body>
+<footer>
+    <div class="footer centered">
+        <div class="container">
+            Copyright © 2019 EarthMC. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+</html>
